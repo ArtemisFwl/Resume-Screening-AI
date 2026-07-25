@@ -1,16 +1,20 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 def calculate_match_score(resume_text, job_description):
     """
-    Calculates the similarity score between a resume and a job description.
+    Calculates the similarity score between a resume and a job description. (Version 2)
     """
-    resume_text = resume_text.lower()
-    job_description = job_description.lower()
+    documents = [resume_text, job_description]
 
-    common_words = 0
-    for word in job_description.split():
-     if word in resume_text:
-        common_words += 1
+    vectorizer = TfidfVectorizer()
+    tfidf_matrix = vectorizer.fit_transform(documents)
 
-    total_words = len(job_description.split())
-    score = (common_words / total_words) * 100
+    similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
+
+    score = similarity[0][0] * 100
 
     return round(score, 2)
+
+
+   
