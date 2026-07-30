@@ -16,4 +16,3 @@ pdf_file="data/sample_resume.pdf"
 
 resume_text= extract_text_from_pdf(pdf_file)
 
-print(resume_text)
