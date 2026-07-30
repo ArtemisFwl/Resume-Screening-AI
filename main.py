@@ -12,15 +12,16 @@ from src.matcher import calculate_match_score
 
 import os
 
-resume_folder = "data/resumes"
+RESUME_FOLDER = "data/resumes"
+JOB_DESCRIPTION_PATH = "data/job_description/jd.pdf"
 
 pdf_files = [
-    os.path.join(resume_folder, file)
-    for file in os.listdir(resume_folder)
+    os.path.join(RESUME_FOLDER, file)
+    for file in os.listdir(RESUME_FOLDER)
     if file.endswith(".pdf")
 ]
 
-job_description = extract_text_from_pdf("data/job_description/jd.pdf")
+job_description = extract_text_from_pdf(JOB_DESCRIPTION_PATH)
 job_description = clean_text(job_description)
 
 results = []
