@@ -20,8 +20,10 @@ pdf_files = [
     if file.endswith(".pdf")
 ]
 
-results = []
+job_description = extract_text_from_pdf("data/job_description/jd.pdf")
+job_description = clean_text(job_description)
 
+results = []
 for pdf_file in pdf_files:
     raw_text = extract_text_from_pdf(pdf_file)
     cleaned_text = clean_text(raw_text)
@@ -40,5 +42,3 @@ for rank, (resume_name, score) in enumerate(results, start=1):
     print(f"{rank}. {resume_name} --> {score}%")
 
 
-job_description = extract_text_from_pdf("data/job_description/jd.pdf")
-job_description = clean_text(job_description)
