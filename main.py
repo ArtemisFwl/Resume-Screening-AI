@@ -10,40 +10,35 @@ from src.text_cleaner import clean_text
 from src.skill_extractor import extract_skills
 from src.matcher import calculate_match_score
 
-pdf_file = "data/sample_resume.pdf"
+import os
 
-raw_text = extract_text_from_pdf(pdf_file)
+resume_folder = "data/resumes"
 
-cleaned_text = clean_text(raw_text)
-print("Cleaned Text")
-print(cleaned_text[:500])
+pdf_files = [
+    os.path.join(resume_folder, file)
+    for file in os.listdir(resume_folder)
+    if file.endswith(".pdf")
+]
+
+results = []
+
+for pdf_file in pdf_files:
+    raw_text = extract_text_from_pdf(pdf_file)
+    cleaned_text = clean_text(raw_text)
+    detected_skills = extract_skills(cleaned_text)
+    match_score = calculate_match_score(cleaned_text, job_description)
+    results.append((os.path.basename(pdf_file), match_score))
+
+results.sort(key=lambda x: x[1], reverse=True)
 
 
-detected_skills = extract_skills(cleaned_text)
-print("\nDetected Skills:")
-for skill in detected_skills:
-    print(f"- {skill}")
+print("\n" + "=" * 40)
+print("CANDIDATE RANKING")
+print("=" * 40)
+
+for rank, (resume_name, score) in enumerate(results, start=1):
+    print(f"{rank}. {resume_name} --> {score}%")
 
 
-job_description = """
-Looking for a Data Scientist with experience in Python, Machine Learning,
-TensorFlow, Pandas, NumPy, SQL, Git, and data analysis.
-"""
-
-jd_skills = extract_skills(job_description.lower())
-print("\nJob Description Skills:")
-for skill in jd_skills:
-    print(f"- {skill}")
-
-match_score = calculate_match_score(cleaned_text, job_description)
-print(f"\nMatch Score: {match_score}%")
-
-matched_skills = []
-
-for skill in jd_skills:
-    if skill in detected_skills:
-        matched_skills.append(skill)
-
-print("\nMatched Skills:")
-for skill in matched_skills:
-    print(f"✓ {skill}")
+job_description = extract_text_from_pdf("data/job_description/jd.pdf")
+job_description = clean_text(job_description)
